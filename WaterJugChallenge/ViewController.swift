@@ -49,6 +49,7 @@ class ViewController: UIViewController {
 
     @IBAction func previous(_ sender: Any) {
         guard stepIndex > 0 else { displayInitialResults(); return }
+        
         stepIndex -= 1
         updateDisplay()
     }
@@ -56,7 +57,7 @@ class ViewController: UIViewController {
     func displayInitialResults() {
         stepIndex = -1
         
-        nextButton.isEnabled     = true
+        nextButton.isEnabled     = controller?.steps.count ?? 0 > 0
         previousButton.isEnabled = false
 
         stepLabel.text   = "0/\(controller?.steps.count ?? 0)"

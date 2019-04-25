@@ -29,14 +29,27 @@ class WaterJugChallengeTests: XCTestCase {
     }
     
     func testSimpleCase() {
-        XCTAssertEqual(JugController.solveFor(x: 1, y: 1, z: 1).first?.description, "Fill x")
-        XCTAssertEqual(JugController.solveFor(x: 1, y: 2, z: 2).first?.description, "Fill y")
-        XCTAssertEqual(JugController.solveFor(x: 2, y: 3, z: 4).description, "No Solution")
+        var controller = JugController(x: 1, y: 1, z: 1)
+        controller.solve()
+        XCTAssertEqual(controller.steps.first?.description, "Fill x")
+        
+        controller = JugController(x: 1, y: 2, z: 2)
+        controller.solve()
+        XCTAssertEqual(controller.steps.first?.description, "Fill y")
+        
+        controller = JugController(x: 2, y: 3, z: 4)
+        controller.solve()
+        XCTAssertEqual(controller.steps.description, "No Solution")
     }
     
     func testMutualPrimes() {
-        XCTAssertNil(JugController.solveFor(x: 2, y: 4, z: 1).first, "There should be no solution.")
-        XCTAssertEqual(JugController.solveFor(x: 6, y: 3, z: 5).description, "No Solution")
+        var controller = JugController(x: 2, y: 4, z: 1)
+        controller.solve()
+         XCTAssertNil(controller.steps.first, "There should be no solution.")
+        
+        controller = JugController(x: 6, y: 3, z: 5)
+        controller.solve()
+        XCTAssertEqual(controller.steps.description, "No Solution")
     }
     
     static let NoSolutions: [(x: Int, y: Int, z: Int)] = [

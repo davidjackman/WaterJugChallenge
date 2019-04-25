@@ -6,9 +6,6 @@
 //  Copyright © 2019 David Jackman. All rights reserved.
 //
 
-// Interesting Article Regarding the Challenge
-// http://mathforum.org/library/drmath/view/60606.html
-
 import Foundation
 
 struct Jug {
@@ -26,13 +23,6 @@ struct Jug {
     
     var isEmpty: Bool {
         return contents == 0
-    }
-    
-    @discardableResult
-    mutating func setContents(with newValue: Int) -> Int {
-        let oldValue = contents
-        contents = newValue
-        return oldValue
     }
     
 }
@@ -99,15 +89,11 @@ struct JugState {
         }
     }
     
-    func output() {
-        print("x: \(x.contents)/\(x.capacity) y: \(y.contents)/\(y.capacity)")
-    }
 }
 
 enum JugIndex {
     case x
     case y
-    
 }
 
 enum JugStep {
@@ -159,29 +145,19 @@ class JugController {
     }
     
     func fill(at index: JugIndex) {
-        print("Filling \(index)")
-        state.output()
         switch index {
         case .x:
-            let s = JugState(x: Jug(state.x.capacity, contents: state.x.capacity), y: Jug(state.y.capacity, contents: state.y.contents))
-            s.output()
-            state = s
+            state = JugState(x: Jug(state.x.capacity, contents: state.x.capacity), y: Jug(state.y.capacity, contents: state.y.contents))
             
         case .y:
             state = JugState(x: Jug(state.x.capacity, contents: state.x.contents), y: Jug(state.y.capacity, contents: state.y.capacity))
         }
         
-        state.output()
-//        var j = jug(at: index)
-//        j.contents = j.capacity
-//
         steps.append(.fill(index))
         states.append(state)
     }
     
     func empty(at index: JugIndex) {
-        print("Emptying \(index)")
-        
         switch index {
         case .x:
             state = JugState(x: Jug(state.x.capacity, contents: 0), y: state.y)
@@ -190,19 +166,13 @@ class JugController {
             state = JugState(x: state.x, y: Jug(state.y.capacity, contents: 0))
         }
 
-//        var j = jug(at: index)
-//        j.contents = 0
-
         steps.append(.empty(index))
         states.append(state)
     }
     
     func transfer(_ from: JugIndex, _ to: JugIndex) {
-        print("Transfering \(from), \(to)")
-        state.output()
-        
-        var f = jug(at: from)
-        var t = jug(at: to)
+        let f = jug(at: from)
+        let t = jug(at: to)
         
         if t.isFull { return }
         if f.isEmpty { return }
@@ -212,32 +182,24 @@ class JugController {
         if space >= f.contents {
             switch from {
             case .x:
-                let s = JugState(x: Jug(state.x.capacity, contents: 0),
+                state = JugState(x: Jug(state.x.capacity, contents: 0),
                                  y: Jug(state.y.capacity, contents: state.y.contents + state.x.contents))
-                s.output()
-                state = s
-                
+
             case .y:
-                let s = JugState(x: Jug(state.x.capacity, contents: state.x.contents + state.y.contents),
+                state = JugState(x: Jug(state.x.capacity, contents: state.x.contents + state.y.contents),
                                  y: Jug(state.y.capacity, contents: 0))
-                s.output()
-                state = s
             }
         } else {
             switch from {
             case .x:
                 let fromContents = state.x.contents - space
-                let s = JugState(x: Jug(state.x.capacity, contents: fromContents),
+                state = JugState(x: Jug(state.x.capacity, contents: fromContents),
                                  y: Jug(state.y.capacity, contents: state.y.capacity))
-                s.output()
-                state = s
                 
             case .y:
                 let fromContents = state.y.contents - space
-                let s = JugState(x: Jug(state.x.capacity, contents: state.x.capacity),
+                state = JugState(x: Jug(state.x.capacity, contents: state.x.capacity),
                                  y: Jug(state.y.capacity, contents: fromContents))
-                s.output()
-                state = s
             }
         }
         steps.append(.transfer((from, to)))
@@ -278,25 +240,8 @@ class JugController {
         
     }
     
-    static func solveFor(x: Int, y: Int, z: Int) -> Solution {
-        print("Examining X \(x) Y \(y) Z \(z)")
-        let controller = JugController(x: x, y: y, z: z)
-
-        controller.solve()
-
-        return controller.steps
-    }
-    
     func has(amount: Int) -> Bool {
         return [state.x.contents, state.y.contents].contains(amount)
-    }
-    
-    func isEmpty(at index: JugIndex) -> Bool {
-        return jug(at: index).isEmpty
-    }
-    
-    func allJugsAreEmpty() -> Bool {
-        return false
     }
     
     func debugPrint() {
