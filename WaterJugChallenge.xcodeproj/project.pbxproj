@@ -12,7 +12,8 @@
 		63E6DC4C226E9ECE0003A7AC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63E6DC4A226E9ECE0003A7AC /* Main.storyboard */; };
 		63E6DC4E226E9ECF0003A7AC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 63E6DC4D226E9ECF0003A7AC /* Assets.xcassets */; };
 		63E6DC51226E9ECF0003A7AC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63E6DC4F226E9ECF0003A7AC /* LaunchScreen.storyboard */; };
-		63E6DC5C226E9ECF0003A7AC /* WaterJugChallengeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E6DC5B226E9ECF0003A7AC /* WaterJugChallengeTests.swift */; };
+		63E6DC5C226E9ECF0003A7AC /* JugChallengeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E6DC5B226E9ECF0003A7AC /* JugChallengeTests.swift */; };
+		63E6DC67226E9FBA0003A7AC /* JugController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E6DC66226E9FBA0003A7AC /* JugController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,8 +35,9 @@
 		63E6DC50226E9ECF0003A7AC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		63E6DC52226E9ECF0003A7AC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		63E6DC57226E9ECF0003A7AC /* WaterJugChallengeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WaterJugChallengeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		63E6DC5B226E9ECF0003A7AC /* WaterJugChallengeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaterJugChallengeTests.swift; sourceTree = "<group>"; };
+		63E6DC5B226E9ECF0003A7AC /* JugChallengeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JugChallengeTests.swift; sourceTree = "<group>"; };
 		63E6DC5D226E9ECF0003A7AC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		63E6DC66226E9FBA0003A7AC /* JugController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JugController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +81,7 @@
 			children = (
 				63E6DC46226E9ECE0003A7AC /* AppDelegate.swift */,
 				63E6DC48226E9ECE0003A7AC /* ViewController.swift */,
+				63E6DC66226E9FBA0003A7AC /* JugController.swift */,
 				63E6DC4A226E9ECE0003A7AC /* Main.storyboard */,
 				63E6DC4D226E9ECF0003A7AC /* Assets.xcassets */,
 				63E6DC4F226E9ECF0003A7AC /* LaunchScreen.storyboard */,
@@ -90,7 +93,7 @@
 		63E6DC5A226E9ECF0003A7AC /* WaterJugChallengeTests */ = {
 			isa = PBXGroup;
 			children = (
-				63E6DC5B226E9ECF0003A7AC /* WaterJugChallengeTests.swift */,
+				63E6DC5B226E9ECF0003A7AC /* JugChallengeTests.swift */,
 				63E6DC5D226E9ECF0003A7AC /* Info.plist */,
 			);
 			path = WaterJugChallengeTests;
@@ -197,6 +200,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63E6DC67226E9FBA0003A7AC /* JugController.swift in Sources */,
 				63E6DC49226E9ECE0003A7AC /* ViewController.swift in Sources */,
 				63E6DC47226E9ECE0003A7AC /* AppDelegate.swift in Sources */,
 			);
@@ -206,7 +210,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				63E6DC5C226E9ECF0003A7AC /* WaterJugChallengeTests.swift in Sources */,
+				63E6DC5C226E9ECF0003A7AC /* JugChallengeTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
