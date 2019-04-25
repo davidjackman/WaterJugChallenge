@@ -234,7 +234,6 @@ class JugController {
                     transfer(n.from, n.to)
 
                 }
-                debugPrint()
             }
         }
         
@@ -243,11 +242,7 @@ class JugController {
     func has(amount: Int) -> Bool {
         return [state.x.contents, state.y.contents].contains(amount)
     }
-    
-    func debugPrint() {
-        print("Controller (\(state.x.contents)/\(state.x.capacity), \(state.y.contents)/\(state.y.capacity))")
-    }
-    
+        
 }
 
 extension Int {
