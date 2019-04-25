@@ -86,13 +86,10 @@ class ViewController: UIViewController {
         }
         
         let state = c.states[stepIndex]
-        let xText = "\(state.x.contents)/\(state.x.capacity)"
-        xLabel?.text = xText
+        xLabel?.text = "\(state.x.contents)/\(state.x.capacity)"
+        yLabel?.text = "\(state.y.contents)/\(state.y.capacity)"
         
-        let yText = "\(state.y.contents)/\(state.y.capacity)"
-        yLabel?.text = yText
-        
-        nextButton.isEnabled = stepIndex + 1 < c.steps.count
+        nextButton.isEnabled     = stepIndex + 1 < c.steps.count
         previousButton.isEnabled = stepIndex >= 0
     }
 
