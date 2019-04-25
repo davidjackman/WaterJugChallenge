@@ -24,7 +24,12 @@ class ViewController: UIViewController {
     @IBOutlet weak var previousButton: UIButton!
     
     var controller: JugController?
-    var stepIndex = 0
+    var stepIndex = -1 {
+        didSet {
+            guard stepIndex >= 0 else { displayInitialResults(); return }
+            updateDisplay()
+        }
+    }
     
     @IBAction func go(_ sender: Any) {
         guard
@@ -39,24 +44,18 @@ class ViewController: UIViewController {
         controller = JugController(x: xValue, y: yValue, z: zValue)
         controller?.solve()
         
-        displayInitialResults()
+        stepIndex = -1
     }
     
     @IBAction func next(_ sender: Any) {
         stepIndex += 1
-        updateDisplay()
     }
 
     @IBAction func previous(_ sender: Any) {
-        guard stepIndex > 0 else { displayInitialResults(); return }
-        
         stepIndex -= 1
-        updateDisplay()
     }
     
     func displayInitialResults() {
-        stepIndex = -1
-        
         nextButton.isEnabled     = controller?.steps.count ?? 0 > 0
         previousButton.isEnabled = false
 
