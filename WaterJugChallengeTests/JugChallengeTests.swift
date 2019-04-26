@@ -33,6 +33,14 @@ class WaterJugChallengeTests: XCTestCase {
         controller.solve()
         XCTAssertEqual(controller.steps.first?.description, "Fill x")
         
+        controller = JugController(x: 0, y: 3, z: 3)
+        controller.solve()
+        XCTAssertEqual(controller.steps.first?.description, "Fill y")
+        
+        controller = JugController(x: 0, y: 0, z: 0)
+        controller.solve()
+        XCTAssertNil(controller.steps.first, "Do Nothing")
+        
         controller = JugController(x: 1, y: 2, z: 2)
         controller.solve()
         XCTAssertEqual(controller.steps.first?.description, "Fill y")
@@ -53,7 +61,8 @@ class WaterJugChallengeTests: XCTestCase {
     }
     
     static let NoSolutions: [(x: Int, y: Int, z: Int)] = [
-        (0, 2, 0), (0, 2, 0), (2, 0, 0), (-2, 13, 10), (-1, -1, -1), (0, 0, 0)
+        (-2, 13, 10),
+        (-1, -1, -1),
     ]
     
     func testNoSolutions() {

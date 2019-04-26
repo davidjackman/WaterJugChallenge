@@ -215,13 +215,13 @@ class JugController {
     }
     
     func solve() {
-        guard canSolve(for: z) else { return }
-        
-        if state.x.capacity == z {
+        if state.x.capacity == z && z >= 0 {
             fill(at: .x)
-        } else if state.y.capacity == z {
+        } else if state.y.capacity == z && z >= 0 {
             fill(at: .y)
         } else {
+            guard canSolve(for: z) else { return }
+
             while !has(amount: z) {
                 switch state.next {
                 case .fill(let i):
