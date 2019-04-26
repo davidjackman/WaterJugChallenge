@@ -20,8 +20,17 @@ class ViewController: UIViewController {
     @IBOutlet weak var zField: UITextField!
     
     @IBOutlet weak var goButton: UIButton!
+    @IBOutlet weak var autoButton: UIButton!
     @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var previousButton: UIButton!
+    
+    @IBOutlet weak var xJugView: UIView!
+    @IBOutlet weak var yJugView: UIView!
+    @IBOutlet weak var xWaterView: UIView!
+    @IBOutlet weak var yWaterView: UIView!
+    
+    @IBOutlet weak var xHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var yHeightConstraint: NSLayoutConstraint!
     
     var controller: JugController?
     var stepIndex = -1 {
@@ -47,6 +56,16 @@ class ViewController: UIViewController {
         stepIndex = -1
     }
     
+    @IBAction func auto(_ sender: Any) {
+        _ = Timer.scheduledTimer(withTimeInterval: 0.75, repeats: true, block: { (t) in
+            if self.stepIndex < self.controller?.steps.count ?? 0 {
+                self.next(self)
+            } else {
+                t.invalidate()
+            }
+        })
+    }
+    
     @IBAction func next(_ sender: Any) {
         stepIndex += 1
     }
@@ -63,6 +82,14 @@ class ViewController: UIViewController {
         xLabel?.text     = "0/\(controller?.state.x.capacity ?? 0)"
         yLabel?.text     = "0/\(controller?.state.y.capacity ?? 0)"
         actionLabel.text = controller?.steps.count == 0 ? "No\nSolution" : "Solved!"
+        
+        self.xHeightConstraint.constant = 0
+        self.yHeightConstraint.constant = 0
+        UIView.animate(withDuration: 0.25) {
+            self.xWaterView.setNeedsLayout()
+            self.yWaterView.setNeedsLayout()
+        }
+
     }
     
     func updateDisplay() {
@@ -88,9 +115,31 @@ class ViewController: UIViewController {
         xLabel?.text = "\(state.x.contents)/\(state.x.capacity)"
         yLabel?.text = "\(state.y.contents)/\(state.y.capacity)"
         
-        nextButton.isEnabled     = stepIndex + 1 < c.steps.count
-        previousButton.isEnabled = stepIndex >= 0
+        nextButton.isEnabled     = false
+        previousButton.isEnabled = false
+        
+        let xScale = CGFloat(state.x.contents)/CGFloat(state.x.capacity)
+        let xHeight = xJugView.bounds.height * xScale
+        self.xHeightConstraint.constant = xHeight
+        let yScale = CGFloat(state.y.contents)/CGFloat(state.y.capacity)
+        let yHeight = yJugView.bounds.height * yScale
+        self.yHeightConstraint.constant = yHeight
+        UIView.animate(withDuration: 0.25, animations: {
+            self.xWaterView.setNeedsLayout()
+            self.yWaterView.setNeedsLayout()
+        }) { (_) in
+            self.nextButton.isEnabled     = self.stepIndex + 1 < c.steps.count
+            self.previousButton.isEnabled = self.stepIndex >= 0
+        }
     }
 
 }
 
+extension ViewController: UITextFieldDelegate {
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+}
