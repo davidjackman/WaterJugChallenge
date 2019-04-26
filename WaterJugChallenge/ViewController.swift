@@ -32,6 +32,8 @@ class ViewController: UIViewController {
     @IBOutlet weak var xHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var yHeightConstraint: NSLayoutConstraint!
     
+    var timer: Timer?
+    
     var controller: JugController?
     var stepIndex = -1 {
         didSet {
@@ -56,14 +58,21 @@ class ViewController: UIViewController {
         stepIndex = -1
     }
     
-    @IBAction func auto(_ sender: Any) {
-        _ = Timer.scheduledTimer(withTimeInterval: 0.75, repeats: true, block: { (t) in
-            if self.stepIndex < self.controller?.steps.count ?? 0 {
-                self.next(self)
-            } else {
-                t.invalidate()
-            }
-        })
+    @IBAction func auto(_ sender: UIButton) {
+        if let t = timer {
+            t.invalidate()
+            timer = nil
+            sender.setTitle("Auto Play Solution", for: .normal)
+        } else {
+            sender.setTitle("Stop Animating", for: .normal)
+            timer = Timer.scheduledTimer(withTimeInterval: 0.75, repeats: true, block: { (t) in
+                if self.stepIndex < self.controller?.steps.count ?? 0 {
+                    self.next(self)
+                } else {
+                    t.invalidate()
+                }
+            })
+        }
     }
     
     @IBAction func next(_ sender: Any) {
@@ -75,13 +84,16 @@ class ViewController: UIViewController {
     }
     
     func displayInitialResults() {
-        nextButton.isEnabled     = controller?.steps.count ?? 0 > 0
+        let solved = controller?.steps.count != 0
+        nextButton.isEnabled     = solved
+        autoButton.isEnabled     = solved
         previousButton.isEnabled = false
 
         stepLabel.text   = "0/\(controller?.steps.count ?? 0)"
-        xLabel?.text     = "0/\(controller?.state.x.capacity ?? 0)"
-        yLabel?.text     = "0/\(controller?.state.y.capacity ?? 0)"
-        actionLabel.text = controller?.steps.count == 0 ? "No\nSolution" : "Solved!"
+        
+        xLabel?.text     = solved ? "0/\(controller?.state.x.capacity ?? 0)" : "?/?"
+        yLabel?.text     = solved ? "0/\(controller?.state.y.capacity ?? 0)" : "?/?"
+        actionLabel.text = solved ? "Solved!" : "No\nSolution"
         
         self.xHeightConstraint.constant = 0
         self.yHeightConstraint.constant = 0
@@ -95,11 +107,22 @@ class ViewController: UIViewController {
     func updateDisplay() {
         guard let c = controller, c.steps.count > stepIndex, c.states.count > stepIndex else { return }
         
+        updateStepLabel()
+        updateActionLabel()
+        updateLabels()
+        updateViews()
+    }
+    
+    func updateStepLabel() {
+        guard let c = controller else { return }
+        
         stepLabel.text = "\(stepIndex + 1)/\(c.steps.count)"
+    }
+    
+    func updateActionLabel() {
+        guard let c = controller else { return }
         
-        let step = c.steps[stepIndex]
-        
-        switch step {
+        switch c.steps[stepIndex] {
         case .empty(let i):
             actionLabel?.text = "Empty\n\(i)"
             
@@ -110,10 +133,20 @@ class ViewController: UIViewController {
             actionLabel?.text = "Transfer\n\(ft.from) to \(ft.to)"
             
         }
+    }
+    
+    func updateLabels() {
+        guard let c = controller else { return }
         
         let state = c.states[stepIndex]
         xLabel?.text = "\(state.x.contents)/\(state.x.capacity)"
         yLabel?.text = "\(state.y.contents)/\(state.y.capacity)"
+    }
+    
+    func updateViews() {
+        guard let c = controller else { return }
+        
+        let state = c.states[stepIndex]
         
         nextButton.isEnabled     = false
         previousButton.isEnabled = false
@@ -121,9 +154,11 @@ class ViewController: UIViewController {
         let xScale = CGFloat(state.x.contents)/CGFloat(state.x.capacity)
         let xHeight = xJugView.bounds.height * xScale
         self.xHeightConstraint.constant = xHeight
+        
         let yScale = CGFloat(state.y.contents)/CGFloat(state.y.capacity)
         let yHeight = yJugView.bounds.height * yScale
         self.yHeightConstraint.constant = yHeight
+        
         UIView.animate(withDuration: 0.25, animations: {
             self.xWaterView.setNeedsLayout()
             self.yWaterView.setNeedsLayout()

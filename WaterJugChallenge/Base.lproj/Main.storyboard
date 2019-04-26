@@ -151,7 +151,6 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstItem="xka-oj-ZEp" firstAttribute="top" secondItem="bew-Wl-u9T" secondAttribute="top" constant="8" id="5OO-HR-RAJ"/>
                                             <constraint firstItem="xka-oj-ZEp" firstAttribute="centerX" secondItem="bew-Wl-u9T" secondAttribute="centerX" constant="1" id="CFh-9Q-8IS"/>
