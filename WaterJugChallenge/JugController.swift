@@ -64,31 +64,36 @@ struct JugState {
         return x.capacity < y.capacity ? .x : .y
     }
     
-    var next: JugStep {
-        let largestJug = jug(for: largest)
-        let smallestJug = jug(for: smallest)
+    func next(forward: Bool = true) -> JugStep {
+        let from = forward ? largest : smallest
+        let fromJug = jug(for: from)
+        let to = forward ? smallest : largest
+        let toJug = jug(for: to)
         
-        switch (largestJug.contents, smallestJug.contents) {
+        switch (fromJug.contents, toJug.contents) {
         case (0, 0):
-            return .fill(largest)
+            return .fill(from)
             
-        case (let i, _) where i == largestJug.capacity:
-            return .transfer((largest, smallest))
+        case (let i, _) where i == fromJug.capacity:
+            return .transfer((from, to))
             
-        case (_, let j) where j == smallestJug.capacity:
-            return .empty(smallest)
+        case (_, let j) where j == toJug.capacity:
+            return .empty(to)
             
         case (_, 0):
-            return .transfer((largest, smallest))
+            return .transfer((from, to))
             
         case (0, _):
-            return .fill(largest)
+            return .fill(from)
             
         default:
-            return .transfer((largest, smallest))
+            return .transfer((from, to))
         }
     }
     
+    func output() {
+        print("x: \(x.contents)/\(x.capacity) y: \(y.contents)/\(y.capacity)")
+    }
 }
 
 enum JugIndex {
@@ -127,9 +132,25 @@ class JugController {
     var state: JugState
     let z: Int
     
-    var steps = Solution()
-    var states = [JugState]()
+    var forwardSteps = Solution()
+    var forwardStates = [JugState]()
+    var backSteps = Solution()
+    var backStates = [JugState]()
+
+    var bestSteps: Solution {
+        if backSteps.count > 0 && backSteps.count < forwardSteps.count {
+            return backSteps
+        }
+        return forwardSteps
+    }
     
+    var bestStates: [JugState] {
+        if backStates.count > 0 && backStates.count < forwardStates.count {
+            return backStates
+        }
+        return forwardStates
+    }
+        
     init(x: Int, y: Int, z: Int) {
         self.state = JugState(x: Jug(x), y: Jug(y))
         self.z = z
@@ -144,20 +165,34 @@ class JugController {
         }
     }
     
-    func fill(at index: JugIndex) {
+    func fill(at index: JugIndex, forward: Bool = true) {
+        print("Filling \(index)")
+        state.output()
+        
         switch index {
         case .x:
             state = JugState(x: Jug(state.x.capacity, contents: state.x.capacity), y: Jug(state.y.capacity, contents: state.y.contents))
             
         case .y:
             state = JugState(x: Jug(state.x.capacity, contents: state.x.contents), y: Jug(state.y.capacity, contents: state.y.capacity))
+            
         }
         
-        steps.append(.fill(index))
-        states.append(state)
+        state.output()
+
+        if forward {
+            forwardSteps.append(.fill(index))
+            forwardStates.append(state)
+        } else {
+            backSteps.append(.fill(index))
+            backStates.append(state)
+        }
     }
     
-    func empty(at index: JugIndex) {
+    func empty(at index: JugIndex, forward: Bool = true) {
+        print("Emptying \(index)")
+        state.output()
+        
         switch index {
         case .x:
             state = JugState(x: Jug(state.x.capacity, contents: 0), y: state.y)
@@ -165,12 +200,22 @@ class JugController {
         case .y:
             state = JugState(x: state.x, y: Jug(state.y.capacity, contents: 0))
         }
+        
+        state.output()
 
-        steps.append(.empty(index))
-        states.append(state)
+        if forward {
+            forwardSteps.append(.empty(index))
+            forwardStates.append(state)
+        } else {
+            backSteps.append(.empty(index))
+            backStates.append(state)
+        }
     }
     
-    func transfer(_ from: JugIndex, _ to: JugIndex) {
+    func transfer(_ from: JugIndex, _ to: JugIndex, forward: Bool = true) {
+        print("Transfering \(from), \(to)")
+        state.output()
+
         let f = jug(at: from)
         let t = jug(at: to)
         
@@ -202,8 +247,16 @@ class JugController {
                                  y: Jug(state.y.capacity, contents: fromContents))
             }
         }
-        steps.append(.transfer((from, to)))
-        states.append(state)
+
+        state.output()
+
+        if forward {
+            forwardSteps.append(.transfer((from, to)))
+            forwardStates.append(state)
+        } else {
+            backSteps.append(.transfer((from, to)))
+            backStates.append(state)
+        }
     }
     
     func canSolve(for n: Int) -> Bool {
@@ -215,28 +268,42 @@ class JugController {
     }
     
     func solve() {
+        print("Solving for x: \(state.x.capacity) y: \(state.y.capacity) z: \(z)")
         if state.x.capacity == z && z >= 0 {
             fill(at: .x)
+            return
         } else if state.y.capacity == z && z >= 0 {
             fill(at: .y)
+            return
         } else {
             guard canSolve(for: z) else { return }
-
-            while !has(amount: z) {
-                switch state.next {
-                case .fill(let i):
-                    fill(at: i)
+            [true, false].forEach { (forward) in
+                print(forward ? "FORWARD:\n=======" : "BACKWARD\n=========")
+                self.state = JugState(x: Jug(state.x.capacity), y: Jug(state.y.capacity))
+                while !has(amount: z) {
                     
-                case .empty(let i):
-                    empty(at: i)
-                    
-                case .transfer(let n):
-                    transfer(n.from, n.to)
-
+                    switch state.next(forward: forward) {
+                        
+                    case .fill(let i):
+                        fill(at: i, forward: forward)
+                        
+                    case .empty(let i):
+                        empty(at: i, forward: forward)
+                        
+                    case .transfer(let n):
+                        transfer(n.from, n.to, forward: forward)
+                        
+                    }
                 }
             }
         }
         
+        print("Forward Steps: \(forwardSteps.count)  BackwardSteps: \(backSteps.count)")
+        
+//        if backSteps.count > 0 && backSteps.count < forwardSteps.count {
+//            forwardSteps = backSteps
+//            forwardStates = backStates
+//        }
     }
     
     func has(amount: Int) -> Bool {

@@ -66,10 +66,12 @@ class ViewController: UIViewController {
         } else {
             sender.setTitle("Stop Animating", for: .normal)
             timer = Timer.scheduledTimer(withTimeInterval: 0.75, repeats: true, block: { (t) in
-                if self.stepIndex < self.controller?.steps.count ?? 0 {
+                if self.stepIndex < self.controller?.bestSteps.count ?? 0 {
                     self.next(self)
                 } else {
                     t.invalidate()
+                    self.timer = nil
+                    sender.setTitle("Auto Play Solution", for: .normal)
                 }
             })
         }
@@ -84,12 +86,12 @@ class ViewController: UIViewController {
     }
     
     func displayInitialResults() {
-        let solved = controller?.steps.count != 0
+        let solved = controller?.bestSteps.count != 0
         nextButton.isEnabled     = solved
         autoButton.isEnabled     = solved
         previousButton.isEnabled = false
 
-        stepLabel.text   = "0/\(controller?.steps.count ?? 0)"
+        stepLabel.text   = "0/\(controller?.bestSteps.count ?? 0)"
         
         xLabel?.text     = solved ? "0/\(controller?.state.x.capacity ?? 0)" : "?/?"
         yLabel?.text     = solved ? "0/\(controller?.state.y.capacity ?? 0)" : "?/?"
@@ -98,14 +100,14 @@ class ViewController: UIViewController {
         self.xHeightConstraint.constant = 0
         self.yHeightConstraint.constant = 0
         UIView.animate(withDuration: 0.25) {
-            self.xWaterView.setNeedsLayout()
-            self.yWaterView.setNeedsLayout()
+            self.xJugView.layoutIfNeeded()
+            self.yJugView.layoutIfNeeded()
         }
 
     }
     
     func updateDisplay() {
-        guard let c = controller, c.steps.count > stepIndex, c.states.count > stepIndex else { return }
+        guard let c = controller, c.bestSteps.count > stepIndex, c.bestStates.count > stepIndex else { return }
         
         updateStepLabel()
         updateActionLabel()
@@ -116,21 +118,21 @@ class ViewController: UIViewController {
     func updateStepLabel() {
         guard let c = controller else { return }
         
-        stepLabel.text = "\(stepIndex + 1)/\(c.steps.count)"
+        stepLabel.text = "\(stepIndex + 1)/\(c.bestSteps.count)"
     }
     
     func updateActionLabel() {
         guard let c = controller else { return }
         
-        switch c.steps[stepIndex] {
+        switch c.bestSteps[stepIndex] {
         case .empty(let i):
-            actionLabel?.text = "Empty\n\(i)"
+            actionLabel?.text = "Empty \(i)"
             
         case .fill(let i):
             actionLabel?.text = "Fill \(i)"
             
         case .transfer(let ft):
-            actionLabel?.text = "Transfer\n\(ft.from) to \(ft.to)"
+            actionLabel?.text = "Transfer \(ft.from) to \(ft.to)"
             
         }
     }
@@ -138,7 +140,7 @@ class ViewController: UIViewController {
     func updateXYLabels() {
         guard let c = controller else { return }
         
-        let state = c.states[stepIndex]
+        let state = c.bestStates[stepIndex]
         xLabel?.text = "\(state.x.contents)/\(state.x.capacity)"
         yLabel?.text = "\(state.y.contents)/\(state.y.capacity)"
     }
@@ -146,7 +148,7 @@ class ViewController: UIViewController {
     func updateViews() {
         guard let c = controller else { return }
         
-        let state = c.states[stepIndex]
+        let state = c.bestStates[stepIndex]
         
         nextButton.isEnabled     = false
         previousButton.isEnabled = false
@@ -160,10 +162,10 @@ class ViewController: UIViewController {
         self.yHeightConstraint.constant = yHeight
         
         UIView.animate(withDuration: 0.25, animations: {
-            self.xWaterView.setNeedsLayout()
-            self.yWaterView.setNeedsLayout()
+            self.xJugView.layoutIfNeeded()
+            self.yJugView.layoutIfNeeded()
         }) { (_) in
-            self.nextButton.isEnabled     = self.stepIndex + 1 < c.steps.count
+            self.nextButton.isEnabled     = self.stepIndex + 1 < c.bestSteps.count
             self.previousButton.isEnabled = self.stepIndex >= 0
         }
     }

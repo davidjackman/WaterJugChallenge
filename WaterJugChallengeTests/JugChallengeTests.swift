@@ -31,29 +31,29 @@ class WaterJugChallengeTests: XCTestCase {
     func testSimpleCase() {
         var controller = JugController(x: 1, y: 1, z: 1)
         controller.solve()
-        XCTAssertEqual(controller.steps.first?.description, "Fill x")
+        XCTAssertEqual(controller.bestSteps.first?.description, "Fill x")
         
         controller = JugController(x: 0, y: 3, z: 3)
         controller.solve()
-        XCTAssertEqual(controller.steps.first?.description, "Fill y")
+        XCTAssertEqual(controller.bestSteps.first?.description, "Fill y")
         
         controller = JugController(x: 1, y: 2, z: 2)
         controller.solve()
-        XCTAssertEqual(controller.steps.first?.description, "Fill y")
+        XCTAssertEqual(controller.bestSteps.first?.description, "Fill y")
         
         controller = JugController(x: 2, y: 3, z: 4)
         controller.solve()
-        XCTAssertEqual(controller.steps.description, "No Solution")
+        XCTAssertEqual(controller.bestSteps.description, "No Solution")
     }
     
     func testMutualPrimes() {
         var controller = JugController(x: 2, y: 4, z: 1)
         controller.solve()
-         XCTAssertNil(controller.steps.first, "There should be no solution.")
+         XCTAssertNil(controller.bestSteps.first, "There should be no solution.")
         
         controller = JugController(x: 6, y: 3, z: 5)
         controller.solve()
-        XCTAssertEqual(controller.steps.description, "No Solution")
+        XCTAssertEqual(controller.bestSteps.description, "No Solution")
     }
     
     static let NoSolutions: [(x: Int, y: Int, z: Int)] = [
@@ -65,15 +65,15 @@ class WaterJugChallengeTests: XCTestCase {
         WaterJugChallengeTests.NoSolutions.forEach { p in
             let controller = JugController(x: p.x, y: p.y, z: p.z)
             controller.solve()
-            XCTAssertNil(controller.steps.first, "There should be no solution.")
+            XCTAssertNil(controller.bestSteps.first, "There should be no solution.")
         }
     }
     
     static let WithSolutions: [String : (x: Int, y: Int, z: Int)] = [
         "Fill x\nTransfer x, y" : (3, 2, 1),
-        "Fill y\nTransfer y, x\nEmpty x\nTransfer y, x\nFill y\nTransfer y, x\nEmpty x\nTransfer y, x\nFill y\nTransfer y, x\nEmpty x\nTransfer y, x\nEmpty x\nTransfer y, x\nFill y\nTransfer y, x" : (5, 7, 3),
-        "Fill x\nTransfer x, y\nEmpty y\nTransfer x, y\nFill x\nTransfer x, y\nEmpty y\nTransfer x, y\nFill x\nTransfer x, y\nEmpty y\nTransfer x, y\nEmpty y\nTransfer x, y\nFill x\nTransfer x, y" : (7, 5, 3),
-        "Fill y\nTransfer y, x\nEmpty x\nTransfer y, x\nFill y\nTransfer y, x\nEmpty x\nTransfer y, x\nEmpty x\nTransfer y, x\nFill y\nTransfer y, x\nEmpty x\nTransfer y, x\nFill y\nTransfer y, x\nEmpty x\nTransfer y, x\nEmpty x\nTransfer y, x\nFill y\nTransfer y, x\nEmpty x\nTransfer y, x\nEmpty x\nTransfer y, x\nFill y\nTransfer y, x\nEmpty x\nTransfer y, x\nFill y\nTransfer y, x\nEmpty x\nTransfer y, x\nEmpty x\nTransfer y, x\nFill y\nTransfer y, x" : (13, 21, 12),
+        "Fill x\nTransfer x, y\nFill x\nTransfer x, y" : (5, 7, 3),
+        "Fill y\nTransfer y, x\nFill y\nTransfer y, x" : (7, 5, 3),
+        "Fill x\nTransfer x, y\nFill x\nTransfer x, y\nEmpty y\nTransfer x, y\nFill x\nTransfer x, y\nFill x\nTransfer x, y\nEmpty y\nTransfer x, y\nFill x\nTransfer x, y\nEmpty y\nTransfer x, y\nFill x\nTransfer x, y\nFill x\nTransfer x, y\nEmpty y\nTransfer x, y\nFill x\nTransfer x, y\nFill x\nTransfer x, y" : (13, 21, 12),
         "Fill x\nTransfer x, y\nEmpty y\nTransfer x, y\nFill x\nTransfer x, y\nEmpty y\nTransfer x, y\nFill x\nTransfer x, y\nEmpty y\nTransfer x, y\nFill x\nTransfer x, y\nEmpty y\nTransfer x, y\nEmpty y\nTransfer x, y\nFill x\nTransfer x, y\nEmpty y\nTransfer x, y\nFill x\nTransfer x, y\nEmpty y\nTransfer x, y\nFill x\nTransfer x, y\nEmpty y\nTransfer x, y\nFill x\nTransfer x, y\nEmpty y\nTransfer x, y\nEmpty y\nTransfer x, y\nFill x\nTransfer x, y" : (33, 26, 11)
     ]
     
@@ -81,7 +81,7 @@ class WaterJugChallengeTests: XCTestCase {
         WaterJugChallengeTests.WithSolutions.forEach { key, value in
             let controller = JugController(x: value.x, y: value.y, z: value.z)
             controller.solve()
-            XCTAssertEqual(controller.steps.description, key)
+            XCTAssertEqual(controller.bestSteps.description, key)
         }
     }
     
