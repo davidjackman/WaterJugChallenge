@@ -109,7 +109,7 @@ class ViewController: UIViewController {
         
         updateStepLabel()
         updateActionLabel()
-        updateLabels()
+        updateXYLabels()
         updateViews()
     }
     
@@ -135,7 +135,7 @@ class ViewController: UIViewController {
         }
     }
     
-    func updateLabels() {
+    func updateXYLabels() {
         guard let c = controller else { return }
         
         let state = c.states[stepIndex]

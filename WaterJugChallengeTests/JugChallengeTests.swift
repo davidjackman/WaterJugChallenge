@@ -37,10 +37,6 @@ class WaterJugChallengeTests: XCTestCase {
         controller.solve()
         XCTAssertEqual(controller.steps.first?.description, "Fill y")
         
-        controller = JugController(x: 0, y: 0, z: 0)
-        controller.solve()
-        XCTAssertNil(controller.steps.first, "Do Nothing")
-        
         controller = JugController(x: 1, y: 2, z: 2)
         controller.solve()
         XCTAssertEqual(controller.steps.first?.description, "Fill y")
