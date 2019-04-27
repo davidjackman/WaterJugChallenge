@@ -31,29 +31,29 @@ class WaterJugChallengeTests: XCTestCase {
     func testSimpleCase() {
         var controller = JugController(x: 1, y: 1, z: 1)
         controller.solve()
-        XCTAssertEqual(controller.bestSteps.first?.description, "Fill x")
+        XCTAssertEqual(controller.bestTransactions.first?.step.description, "Fill x")
         
         controller = JugController(x: 0, y: 3, z: 3)
         controller.solve()
-        XCTAssertEqual(controller.bestSteps.first?.description, "Fill y")
+        XCTAssertEqual(controller.bestTransactions.first?.step.description, "Fill y")
         
         controller = JugController(x: 1, y: 2, z: 2)
         controller.solve()
-        XCTAssertEqual(controller.bestSteps.first?.description, "Fill y")
+        XCTAssertEqual(controller.bestTransactions.first?.step.description, "Fill y")
         
         controller = JugController(x: 2, y: 3, z: 4)
         controller.solve()
-        XCTAssertEqual(controller.bestSteps.description, "No Solution")
+        XCTAssertEqual(controller.bestTransactions.description, "No Solution")
     }
     
     func testMutualPrimes() {
         var controller = JugController(x: 2, y: 4, z: 1)
         controller.solve()
-         XCTAssertNil(controller.bestSteps.first, "There should be no solution.")
+         XCTAssertNil(controller.bestTransactions.first, "There should be no solution.")
         
         controller = JugController(x: 6, y: 3, z: 5)
         controller.solve()
-        XCTAssertEqual(controller.bestSteps.description, "No Solution")
+        XCTAssertEqual(controller.bestTransactions.description, "No Solution")
     }
     
     static let NoSolutions: [(x: Int, y: Int, z: Int)] = [
@@ -65,7 +65,7 @@ class WaterJugChallengeTests: XCTestCase {
         WaterJugChallengeTests.NoSolutions.forEach { p in
             let controller = JugController(x: p.x, y: p.y, z: p.z)
             controller.solve()
-            XCTAssertNil(controller.bestSteps.first, "There should be no solution.")
+            XCTAssertNil(controller.bestTransactions.first, "There should be no solution.")
         }
     }
     
@@ -81,7 +81,7 @@ class WaterJugChallengeTests: XCTestCase {
         WaterJugChallengeTests.WithSolutions.forEach { key, value in
             let controller = JugController(x: value.x, y: value.y, z: value.z)
             controller.solve()
-            XCTAssertEqual(controller.bestSteps.description, key)
+            XCTAssertEqual(controller.bestTransactions.description, key)
         }
     }
     

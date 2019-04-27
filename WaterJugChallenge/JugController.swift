@@ -9,6 +9,7 @@
 import Foundation
 
 struct Jug {
+    
     let capacity: Int
     var contents: Int = 0
     
@@ -27,15 +28,18 @@ struct Jug {
     
 }
 
-typealias Solution = [JugStep]
-
-extension Solution {
+struct JugTransaction {
+    let step: JugStep
+    let state: JugState
     
     var description: String {
-        guard self.count > 0 else { return "No Solution" }
-        return self.map { $0.description }.joined(separator: "\n")
+        return step.description
     }
-    
+}
+
+enum JugIndex {
+    case x
+    case y
 }
 
 struct JugState {
@@ -47,13 +51,17 @@ struct JugState {
         self.y = y
     }
     
-    func jug(for index: JugIndex) -> Jug {
+    subscript(index: JugIndex) -> Jug {
         switch index {
         case .x:
             return x
         case .y:
             return y
         }
+    }
+    
+    func jug(for index: JugIndex) -> Jug {
+        return self[index]
     }
     
     var largest: JugIndex {
@@ -65,10 +73,10 @@ struct JugState {
     }
     
     func next(forward: Bool = true) -> JugStep {
-        let from = forward ? largest : smallest
+        let from    = forward ? largest : smallest
         let fromJug = jug(for: from)
-        let to = forward ? smallest : largest
-        let toJug = jug(for: to)
+        let to      = forward ? smallest : largest
+        let toJug   = jug(for: to)
         
         switch (fromJug.contents, toJug.contents) {
         case (0, 0):
@@ -94,11 +102,6 @@ struct JugState {
     func output() {
         print("x: \(x.contents)/\(x.capacity) y: \(y.contents)/\(y.capacity)")
     }
-}
-
-enum JugIndex {
-    case x
-    case y
 }
 
 enum JugStep {
@@ -128,41 +131,37 @@ extension JugStep {
     
 }
 
+typealias Solution = [JugTransaction]
+extension Solution {
+
+    var description: String {
+        guard self.count > 0 else { return "No Solution" }
+        return self.map { $0.step.description }.joined(separator: "\n")
+    }
+
+}
+
 class JugController {
     var state: JugState
     let z: Int
     
-    var forwardSteps = Solution()
-    var forwardStates = [JugState]()
-    var backSteps = Solution()
-    var backStates = [JugState]()
+    var bestTransactions: Solution {
+        if backwardSolution.count > 0 && backwardSolution.count < forwardSolution.count {
+            return backwardSolution
+        }
+        return forwardSolution
+    }
 
-    var bestSteps: Solution {
-        if backSteps.count > 0 && backSteps.count < forwardSteps.count {
-            return backSteps
-        }
-        return forwardSteps
-    }
+    var forwardSolution = Solution()
+    var backwardSolution = Solution()
     
-    var bestStates: [JugState] {
-        if backStates.count > 0 && backStates.count < forwardStates.count {
-            return backStates
-        }
-        return forwardStates
-    }
-        
     init(x: Int, y: Int, z: Int) {
         self.state = JugState(x: Jug(x), y: Jug(y))
         self.z = z
     }
     
     func jug(at index: JugIndex) -> Jug {
-        switch index {
-        case .x:
-            return state.x
-        case .y:
-            return state.y
-        }
+        return state[index]
     }
     
     func fill(at index: JugIndex, forward: Bool = true) {
@@ -181,11 +180,9 @@ class JugController {
         state.output()
 
         if forward {
-            forwardSteps.append(.fill(index))
-            forwardStates.append(state)
+            forwardSolution.append(JugTransaction(step: .fill(index), state: state))
         } else {
-            backSteps.append(.fill(index))
-            backStates.append(state)
+            backwardSolution.append(JugTransaction(step: .fill(index), state: state))
         }
     }
     
@@ -204,11 +201,9 @@ class JugController {
         state.output()
 
         if forward {
-            forwardSteps.append(.empty(index))
-            forwardStates.append(state)
+            forwardSolution.append(JugTransaction(step: .empty(index), state: state))
         } else {
-            backSteps.append(.empty(index))
-            backStates.append(state)
+            backwardSolution.append(JugTransaction(step: .empty(index), state: state))
         }
     }
     
@@ -216,8 +211,8 @@ class JugController {
         print("Transfering \(from), \(to)")
         state.output()
 
-        let f = jug(at: from)
-        let t = jug(at: to)
+        let f = state[from]
+        let t = state[to]
         
         if t.isFull { return }
         if f.isEmpty { return }
@@ -251,11 +246,9 @@ class JugController {
         state.output()
 
         if forward {
-            forwardSteps.append(.transfer((from, to)))
-            forwardStates.append(state)
+            forwardSolution.append(JugTransaction(step: .transfer((from, to)), state: state))
         } else {
-            backSteps.append(.transfer((from, to)))
-            backStates.append(state)
+            backwardSolution.append(JugTransaction(step: .transfer((from, to)), state: state))
         }
     }
     
@@ -298,12 +291,8 @@ class JugController {
             }
         }
         
-        print("Forward Steps: \(forwardSteps.count)  BackwardSteps: \(backSteps.count)")
-        
-//        if backSteps.count > 0 && backSteps.count < forwardSteps.count {
-//            forwardSteps = backSteps
-//            forwardStates = backStates
-//        }
+        print("Forward Steps: \(forwardSolution.count)  BackwardSteps: \(backwardSolution.count)")
+
     }
     
     func has(amount: Int) -> Bool {

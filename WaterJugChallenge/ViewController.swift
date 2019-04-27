@@ -59,14 +59,16 @@ class ViewController: UIViewController {
     }
     
     @IBAction func auto(_ sender: UIButton) {
+        if sender.titleLabel?.text == "Auto Play Solution" { reset() }
+        
         if let t = timer {
             t.invalidate()
             timer = nil
-            sender.setTitle("Auto Play Solution", for: .normal)
+            sender.setTitle("Continue Animating", for: .normal)
         } else {
             sender.setTitle("Stop Animating", for: .normal)
             timer = Timer.scheduledTimer(withTimeInterval: 0.75, repeats: true, block: { (t) in
-                if self.stepIndex < self.controller?.bestSteps.count ?? 0 {
+                if self.stepIndex < self.controller?.bestTransactions.count ?? 0 {
                     self.next(self)
                 } else {
                     t.invalidate()
@@ -75,6 +77,10 @@ class ViewController: UIViewController {
                 }
             })
         }
+    }
+    
+    func reset() {
+        stepIndex = -1
     }
     
     @IBAction func next(_ sender: Any) {
@@ -86,12 +92,12 @@ class ViewController: UIViewController {
     }
     
     func displayInitialResults() {
-        let solved = controller?.bestSteps.count != 0
+        let solved = controller?.bestTransactions.count != 0
         nextButton.isEnabled     = solved
         autoButton.isEnabled     = solved
         previousButton.isEnabled = false
 
-        stepLabel.text   = "0/\(controller?.bestSteps.count ?? 0)"
+        stepLabel.text   = "0/\(controller?.bestTransactions.count ?? 0)"
         
         xLabel?.text     = solved ? "0/\(controller?.state.x.capacity ?? 0)" : "?/?"
         yLabel?.text     = solved ? "0/\(controller?.state.y.capacity ?? 0)" : "?/?"
@@ -107,48 +113,49 @@ class ViewController: UIViewController {
     }
     
     func updateDisplay() {
-        guard let c = controller, c.bestSteps.count > stepIndex, c.bestStates.count > stepIndex else { return }
+        guard let c = controller, c.bestTransactions.count > stepIndex, c.bestTransactions.count > stepIndex else { return }
         
-        updateStepLabel()
-        updateActionLabel()
-        updateXYLabels()
-        updateViews()
+        animateStep()
     }
-    
-    func updateStepLabel() {
-        guard let c = controller else { return }
+}
+
+extension ViewController {
+
+    func animateStep() {
         
-        stepLabel.text = "\(stepIndex + 1)/\(c.bestSteps.count)"
-    }
-    
-    func updateActionLabel() {
-        guard let c = controller else { return }
-        
-        switch c.bestSteps[stepIndex] {
-        case .empty(let i):
-            actionLabel?.text = "Empty \(i)"
+        func updateXYLabels() {
+            guard let c = controller else { return }
             
-        case .fill(let i):
-            actionLabel?.text = "Fill \(i)"
-            
-        case .transfer(let ft):
-            actionLabel?.text = "Transfer \(ft.from) to \(ft.to)"
-            
+            let state = c.bestTransactions[stepIndex].state
+            xLabel?.text = "\(state.x.contents)/\(state.x.capacity)"
+            yLabel?.text = "\(state.y.contents)/\(state.y.capacity)"
         }
-    }
-    
-    func updateXYLabels() {
+        
+        func updateActionLabel() {
+            guard let c = controller else { return }
+            
+            switch c.bestTransactions[stepIndex].step {
+            case .empty(let i):
+                actionLabel?.text = "Empty \(i)"
+                
+            case .fill(let i):
+                actionLabel?.text = "Fill \(i)"
+                
+            case .transfer(let ft):
+                actionLabel?.text = "Transfer \(ft.from) to \(ft.to)"
+                
+            }
+        }
+        
+        func updateStepLabel() {
+            guard let c = controller else { return }
+            
+            stepLabel.text = "\(stepIndex + 1)/\(c.bestTransactions.count)"
+        }
+        
         guard let c = controller else { return }
         
-        let state = c.bestStates[stepIndex]
-        xLabel?.text = "\(state.x.contents)/\(state.x.capacity)"
-        yLabel?.text = "\(state.y.contents)/\(state.y.capacity)"
-    }
-    
-    func updateViews() {
-        guard let c = controller else { return }
-        
-        let state = c.bestStates[stepIndex]
+        let state = c.bestTransactions[stepIndex].state
         
         nextButton.isEnabled     = false
         previousButton.isEnabled = false
@@ -164,8 +171,12 @@ class ViewController: UIViewController {
         UIView.animate(withDuration: 0.25, animations: {
             self.xJugView.layoutIfNeeded()
             self.yJugView.layoutIfNeeded()
+            
+            updateStepLabel()
+            updateActionLabel()
+            updateXYLabels()
         }) { (_) in
-            self.nextButton.isEnabled     = self.stepIndex + 1 < c.bestSteps.count
+            self.nextButton.isEnabled     = self.stepIndex + 1 < c.bestTransactions.count
             self.previousButton.isEnabled = self.stepIndex >= 0
         }
     }
