@@ -14,6 +14,7 @@
 		63E6DC51226E9ECF0003A7AC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63E6DC4F226E9ECF0003A7AC /* LaunchScreen.storyboard */; };
 		63E6DC5C226E9ECF0003A7AC /* JugChallengeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E6DC5B226E9ECF0003A7AC /* JugChallengeTests.swift */; };
 		63E6DC67226E9FBA0003A7AC /* JugController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E6DC66226E9FBA0003A7AC /* JugController.swift */; };
+		63E6DC69227501DC0003A7AC /* JugState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E6DC68227501DC0003A7AC /* JugState.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +39,7 @@
 		63E6DC5B226E9ECF0003A7AC /* JugChallengeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JugChallengeTests.swift; sourceTree = "<group>"; };
 		63E6DC5D226E9ECF0003A7AC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		63E6DC66226E9FBA0003A7AC /* JugController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JugController.swift; sourceTree = "<group>"; };
+		63E6DC68227501DC0003A7AC /* JugState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JugState.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +84,7 @@
 				63E6DC46226E9ECE0003A7AC /* AppDelegate.swift */,
 				63E6DC48226E9ECE0003A7AC /* ViewController.swift */,
 				63E6DC66226E9FBA0003A7AC /* JugController.swift */,
+				63E6DC68227501DC0003A7AC /* JugState.swift */,
 				63E6DC4A226E9ECE0003A7AC /* Main.storyboard */,
 				63E6DC4D226E9ECF0003A7AC /* Assets.xcassets */,
 				63E6DC4F226E9ECF0003A7AC /* LaunchScreen.storyboard */,
@@ -200,6 +203,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63E6DC69227501DC0003A7AC /* JugState.swift in Sources */,
 				63E6DC67226E9FBA0003A7AC /* JugController.swift in Sources */,
 				63E6DC49226E9ECE0003A7AC /* ViewController.swift in Sources */,
 				63E6DC47226E9ECE0003A7AC /* AppDelegate.swift in Sources */,
