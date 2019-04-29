@@ -11,14 +11,14 @@ import UIKit
 
 class JugViewModel {
 
-    static let ModelChanged = Notification.Name("ModelChanged")
+    static let ViewModelChanged = Notification.Name("ModelChanged")
 
     let controller: JugController
     var stepIndex = -1 {
         didSet {
             guard stepIndex < solution.count else { stepIndex -= 1; return }
             
-            NotificationCenter.default.post(name: JugViewModel.ModelChanged, object: self)
+            NotificationCenter.default.post(name: JugViewModel.ViewModelChanged, object: self)
         }
     }
     
@@ -61,7 +61,7 @@ class JugViewModel {
     }
     
     var xLabelText: String {
-        if stepIndex == -1 || !solved {
+        if stepIndex == -1 {
             return solved ? "0/\(solution[0].state.x.capacity)" : "?/?"
         } else {
             guard let jug = currentState?.x else { return "?/?" }

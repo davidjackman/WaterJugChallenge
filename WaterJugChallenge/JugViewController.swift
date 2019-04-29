@@ -39,13 +39,13 @@ class JugViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        NotificationCenter.default.addObserver(forName: JugViewModel.ModelChanged, object: nil, queue: OperationQueue.main) { [weak self] (_) in
+        NotificationCenter.default.addObserver(forName: JugViewModel.ViewModelChanged, object: nil, queue: OperationQueue.main) { [weak self] (_) in
             self?.updateDisplay()
         }
     }
     
     deinit {
-        NotificationCenter.default.removeObserver(self, name: JugViewModel.ModelChanged, object: nil)
+        NotificationCenter.default.removeObserver(self, name: JugViewModel.ViewModelChanged, object: nil)
     }
     
     /**
