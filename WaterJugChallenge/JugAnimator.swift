@@ -9,6 +9,8 @@
 import Foundation
 import UIKit //TODO: Get rid of this dependency
 
+//TODO: Implement this as a random access collection
+
 class JugAnimator {
     let viewModel: JugViewModel
     
@@ -70,7 +72,7 @@ class JugAnimator {
      */
     @discardableResult
     func previous() -> Bool {
-        if viewModel.isAtBeginning { viewModel.retreat(); return true }
+        if !viewModel.isAtBeginning { viewModel.retreat(); return true }
         return false
     }
     

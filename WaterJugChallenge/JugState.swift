@@ -234,7 +234,8 @@ extension JugTransaction.State {
     }
     
     func output() {
-        os_log(.default, log: oslog, "%@", "x: \(x.contents)/\(x.capacity) y: \(y.contents)/\(y.capacity)")
+        os_log(.default, log: oslog, "%@",
+               "x: \(x.contents)/\(x.capacity) y: \(y.contents)/\(y.capacity)")
     }
     
 

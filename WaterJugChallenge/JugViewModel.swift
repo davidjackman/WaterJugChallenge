@@ -22,6 +22,29 @@ class JugViewModel {
         }
     }
     
+    init(controller: JugController) {
+        self.controller = controller
+    }
+    
+    fileprivate var solution: JugTransaction.Solution {
+        return controller.bestSolution
+    }
+    
+    var solved: Bool {
+        return solution.count > 0
+    }
+    
+    var currentState: JugTransaction.State? {
+        guard stepIndex >= 0, stepIndex < solution.count else { return nil }
+        
+        return solution[stepIndex].state
+    }
+
+}
+
+//MARK: Iteration
+extension JugViewModel {
+    
     var hasMoreSteps: Bool {
         return stepIndex < solution.count - 1
     }
@@ -42,23 +65,10 @@ class JugViewModel {
         stepIndex = -1
     }
     
-    init(controller: JugController) {
-        self.controller = controller
-    }
-    
-    fileprivate var solution: JugTransaction.Solution {
-        return controller.bestSolution
-    }
-    
-    var solved: Bool {
-        return solution.count > 0
-    }
-    
-    var currentState: JugTransaction.State? {
-        guard stepIndex >= 0, stepIndex < solution.count else { return nil }
-        
-        return solution[stepIndex].state
-    }
+}
+
+//MARK: Provides Text For Labels
+extension JugViewModel {
     
     var xLabelText: String {
         if stepIndex == -1 {
@@ -97,6 +107,11 @@ class JugViewModel {
         return "\(stepIndex + 1)/\(solution.count)"
     }
     
+}
+
+//MARK: - Enables Buttons
+extension JugViewModel {
+    
     var nextButtonIsEnabled: Bool {
         return solved && stepIndex + 1 < solution.count
     }
@@ -108,6 +123,11 @@ class JugViewModel {
     var autoButtonIsEnabled: Bool {
         return solved
     }
+    
+}
+
+//MARK: Scales Jugs' Contents
+extension JugViewModel {
     
     var xScale: CGFloat {
         guard let state = currentState, state.x.capacity > 0 else { return 0.0 }
@@ -126,5 +146,6 @@ class JugViewModel {
     func yHeight(for height: CGFloat) -> CGFloat {
         return height * yScale
     }
+    
 }
 
