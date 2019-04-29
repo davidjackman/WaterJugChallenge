@@ -55,7 +55,7 @@
                                                 <rect key="frame" x="26" y="0.0" width="30" height="30"/>
                                                 <nil key="textColor"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                                <textInputTraits key="textInputTraits" keyboardType="numbersAndPunctuation"/>
                                                 <connections>
                                                     <outlet property="delegate" destination="BYZ-38-t0r" id="d2Q-1f-uZg"/>
                                                 </connections>
@@ -70,7 +70,7 @@
                                                 <rect key="frame" x="90.666666666666686" y="0.0" width="30" height="30"/>
                                                 <nil key="textColor"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                                <textInputTraits key="textInputTraits" keyboardType="numbersAndPunctuation"/>
                                                 <connections>
                                                     <outlet property="delegate" destination="BYZ-38-t0r" id="t8D-0S-Uwz"/>
                                                 </connections>
@@ -85,7 +85,7 @@
                                                 <rect key="frame" x="156.33333333333331" y="0.0" width="30" height="30"/>
                                                 <nil key="textColor"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                                <textInputTraits key="textInputTraits" keyboardType="numbersAndPunctuation"/>
                                                 <connections>
                                                     <outlet property="delegate" destination="BYZ-38-t0r" id="uoc-Ir-m8D"/>
                                                 </connections>
