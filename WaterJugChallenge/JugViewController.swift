@@ -32,9 +32,9 @@ class JugViewController: UIViewController {
     @IBOutlet weak var xHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var yHeightConstraint: NSLayoutConstraint!
     
-    lazy var controller     = JugController(x: 0, y: 0, z: 0, solved: true)
-    lazy var viewModel = JugViewModel(controller: controller)
-    lazy var animator  = JugAnimator(viewModel: viewModel, button: autoButton)
+    lazy var controller = JugController(x: 8, y: 5, z: 3, solved: true)
+    lazy var viewModel  = JugViewModel(controller: controller)
+    lazy var animator   = JugAnimator(viewModel: viewModel, button: autoButton)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,12 +67,30 @@ class JugViewController: UIViewController {
         controller = JugController(x: xValue, y: yValue, z: zValue)
         viewModel  = JugViewModel(controller: controller)
         animator   = JugAnimator(viewModel: viewModel, button: autoButton)
+
+        disableTheInterface()
+        DispatchQueue(label: "JUG", qos: .background, attributes: .concurrent, autoreleaseFrequency: .inherit, target: nil).async { [weak self] in
+            self?.controller.solve()
+            DispatchQueue.main.async {
+                self?.enableTheInterface()
+                self?.updateDisplay()
+            }
+        }
         
-        controller.solve()
-        
-        updateDisplay()
     }
     
+    func disableTheInterface() {
+        autoButton.isEnabled = false
+        nextButton.isEnabled = false
+        previousButton.isEnabled = false
+        goButton.isEnabled = false
+    }
+    
+    func enableTheInterface() {
+        autoButton.isEnabled = true
+        goButton.isEnabled = true
+    }
+
     /**
      Toggles the automatic animation of the solution.
 
@@ -147,6 +165,13 @@ extension JugViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
+        if [xField, yField, zField].contains(textField),
+            textField.text?.count ?? 0 > 0 {
+            goButton.isEnabled = true
+        }
     }
     
 }
