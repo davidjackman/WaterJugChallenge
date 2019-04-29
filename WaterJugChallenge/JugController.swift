@@ -22,10 +22,6 @@ class JugController {
         if solved { solve() }
     }
     
-    static func solved(x: Int, y: Int, z: Int) -> JugController {
-        return JugController(x: x, y: y, z: z, solved: true)
-    }
-    
     /**
      The best solution is the shortest. so we return the shorted `JugTransaction.Solution`
     */

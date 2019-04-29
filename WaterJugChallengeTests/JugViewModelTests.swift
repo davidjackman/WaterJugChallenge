@@ -12,11 +12,11 @@ import XCTest
 class JugViewModelTests: XCTestCase {
 
     func testViewModel() {
-        XCTAssertEqual(JugViewModel(controller: JugController.solved(x: 1, y: 2, z: 3)).actionLabelText, "No\nSolution")
-        XCTAssertEqual(JugViewModel(controller: JugController.solved(x: 1, y: 2, z: 0)).actionLabelText, "No\nSolution")
-        XCTAssertEqual(JugViewModel(controller: JugController.solved(x: 0, y: 0, z: 0)).actionLabelText, "Solved!")
-        XCTAssertEqual(JugViewModel(controller: JugController.solved(x: 1, y: 2, z: 1)).actionLabelText, "Solved!")
-        XCTAssertEqual(JugViewModel(controller: JugController.solved(x: 8, y: 5, z: 3)).actionLabelText, "Solved!")
+        XCTAssertEqual(JugViewModel(controller: JugController(x: 1, y: 2, z: 3, solved: true)).actionLabelText, "No\nSolution")
+        XCTAssertEqual(JugViewModel(controller: JugController(x: 1, y: 2, z: 0, solved: true)).actionLabelText, "No\nSolution")
+        XCTAssertEqual(JugViewModel(controller: JugController(x: 0, y: 0, z: 0, solved: true)).actionLabelText, "Solved!")
+        XCTAssertEqual(JugViewModel(controller: JugController(x: 1, y: 2, z: 1, solved: true)).actionLabelText, "Solved!")
+        XCTAssertEqual(JugViewModel(controller: JugController(x: 8, y: 5, z: 3, solved: true)).actionLabelText, "Solved!")
     }
     
     func testModelAdvancing() {

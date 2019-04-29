@@ -32,7 +32,7 @@ class JugViewController: UIViewController {
     @IBOutlet weak var xHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var yHeightConstraint: NSLayoutConstraint!
     
-    var controller     = JugController.solved(x: 0, y: 0, z: 0)
+    lazy var controller     = JugController(x: 0, y: 0, z: 0, solved: true)
     lazy var viewModel = JugViewModel(controller: controller)
     lazy var animator  = JugAnimator(viewModel: viewModel, button: autoButton)
     

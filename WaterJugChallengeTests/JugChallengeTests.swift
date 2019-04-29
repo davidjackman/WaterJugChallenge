@@ -86,4 +86,14 @@ class WaterJugChallengeTests: XCTestCase {
         }
     }
     
+    func testPerformanceExample() {
+        self.measure {
+            WaterJugChallengeTests.WithSolutions.forEach { key, value in
+                let controller = JugController(x: value.x, y: value.y, z: value.z)
+                controller.solve()
+                XCTAssertEqual(controller.bestSolution.description, key)
+            }
+        }
+    }
+
 }
