@@ -10,16 +10,20 @@ import Foundation
 import os.log
 
 class JugController {
-    
     var state: JugTransaction.State
     let z: Int
     
     var forwardSolution = JugTransaction.Solution()
     var backwardSolution = JugTransaction.Solution()
     
-    init(x: Int, y: Int, z: Int) {
+    init(x: Int, y: Int, z: Int, solved: Bool = false) {
         self.state = JugTransaction.State(x: JugTransaction.State.Jug(x), y: JugTransaction.State.Jug(y))
         self.z = z
+        if solved { solve() }
+    }
+    
+    static func solved(x: Int, y: Int, z: Int) -> JugController {
+        return JugController(x: x, y: y, z: z, solved: true)
     }
     
     /**
@@ -49,6 +53,9 @@ class JugController {
         } else {
             backwardSolution.append(transaction)
         }
+        
+        transaction.state.output()
+        
         return transaction
     }
     
@@ -59,10 +66,9 @@ class JugController {
         - index: The index of the `Jug` to be filled
         - forward: direction for this solution as Bool
      */
-    func fill(at index: JugTransaction.State.Index, forward: Bool = true) {
+    func fill(at index: JugTransaction.State.Jug.Index, forward: Bool = true) {
         state = appendTransaction(state.transactionApplyingStep(.fill(index)), forward: forward)
             .state
-        state.output()
     }
     
     /**
@@ -72,10 +78,9 @@ class JugController {
         - index: The index of the `Jug` to be filled
         - forward: direction for this solution as Bool
      */
-    func empty(at index: JugTransaction.State.Index, forward: Bool = true) {
+    func empty(at index: JugTransaction.State.Jug.Index, forward: Bool = true) {
         state = appendTransaction(state.transactionApplyingStep(.empty(index)), forward: forward)
             .state
-        state.output()
     }
     
     /**
@@ -86,17 +91,9 @@ class JugController {
         - to: The index of destination `Jug`
         - forward: direction for this solution as Bool
      */
-    func transfer(_ from: JugTransaction.State.Index, _ to: JugTransaction.State.Index, forward: Bool = true) {
+    func transfer(_ from: JugTransaction.State.Jug.Index, _ to: JugTransaction.State.Jug.Index, forward: Bool = true) {
         state = appendTransaction(state.transactionApplyingStep(.transfer((from, to))), forward: forward)
             .state
-        state.output()
-    }
-    
-    /**
-     Convenient Method for asking the state if we can solve for a target `n`
-    */
-    func canSolve(for n: Int) -> Bool {
-        return state.canSolve(for: n)
     }
     
     /**
@@ -113,7 +110,8 @@ class JugController {
      Once solve completes the user can access `bestSolution`
     */
     func solve() {
-        os_log(.default, log: oslog, "%@", "Solving for x: \(state.x.capacity) y: \(state.y.capacity) z: \(z)")
+        os_log(.default, log: oslog, "%@",
+               "Solving for x: \(state.x.capacity) y: \(state.y.capacity) z: \(z)")
         
         if state.x.capacity == z && z >= 0 {
             fill(at: .x)
@@ -122,15 +120,18 @@ class JugController {
             fill(at: .y)
             return
         } else {
-            guard canSolve(for: z) else { return }
+            guard state.canSolve(for: z) else { return }
             
             [true, false].forEach { [weak self] (forward) in
-                os_log(.default, log: OSLog(subsystem: "net.davidjackman.WaterJugChallenge", category: "Solution"), "%@", forward ? "FORWARD:\n=======" : "BACKWARD\n=========")
-                self?.state = JugTransaction.State(x: JugTransaction.State.Jug(state.x.capacity), y: JugTransaction.State.Jug(state.y.capacity))
+                os_log(.default, log: oslog,
+                       "%@", forward ? "FORWARD:\n=======" : "BACKWARD\n=========")
                 
-                while !has(amount: z) {
+                self?.state = JugTransaction.State(x: JugTransaction.State.Jug(state.x.capacity),
+                                                   y: JugTransaction.State.Jug(state.y.capacity))
+                
+                while !state.has(amount: z) {
                     
-                    switch state.next(forward: forward) {
+                    switch state.nextStep(forward: forward) {
                         
                     case .fill(let i):
                         fill(at: i, forward: forward)
@@ -146,44 +147,40 @@ class JugController {
             }
         }
         
-        os_log(.default, log: OSLog(subsystem: "net.davidjackman.WaterJugChallenge", category: "Solution"), "%@", "Forward Steps: \(forwardSolution.count)  BackwardSteps: \(backwardSolution.count)")
+        os_log(.default, log: oslog, "%@",
+               "Forward Steps: \(forwardSolution.count)  BackwardSteps: \(backwardSolution.count)")
 
     }
     
-    func solved() -> JugController {
-        solve()
-        return self
-    }
-    
-    /**
-     Test current state for having the solution for `amount` in one of its `Jug` `contents`
-     
-     - parameters:
-        - amount: The amount which will solve the puzzle
-     
-     - returns:
-        `Bool` indicating the presence of the exact `amount`
-    */
-    func has(amount: Int) -> Bool {
-        return [state.x.contents, state.y.contents].contains(amount)
-    }
-        
 }
 
 extension JugTransaction.State {
 
     /**
+     Test for having the solution for `amount` in one of its `Jug` `contents`
+     
+     - parameters:
+     - amount: The amount which will solve the puzzle
+     
+     - returns:
+     `Bool` indicating the presence of the exact `amount`
+     */
+    func has(amount: Int) -> Bool {
+        return [x.contents, y.contents].contains(amount)
+    }
+    
+    /**
      - parameters:
         - n: The target value
      
      - returns:
-        `Bool` indicating the solvability of the current `Jug`s' `capacity` values in relation to `n`
+        `Bool` indicating the solvability of the current `Jug`s' `capacity` values in relation to `z`
      */
-    func canSolve(for n: Int) -> Bool {
-        return n > 0
+    func canSolve(for z: Int) -> Bool {
+        return z > 0
             && x.capacity > 0
             && y.capacity > 0
-            && (x.capacity >= n || y.capacity >= n)
+            && (x.capacity >= z || y.capacity >= z)
             && x.capacity.primeFactors.isDisjoint(with: y.capacity.primeFactors)
     }
 

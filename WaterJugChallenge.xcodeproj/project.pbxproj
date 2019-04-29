@@ -7,8 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		636C1E542276A42B001FE63F /* JugViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636C1E532276A42B001FE63F /* JugViewModelTests.swift */; };
+		636C1E562276B544001FE63F /* JugViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636C1E552276B544001FE63F /* JugViewModel.swift */; };
+		636C1E582276C97C001FE63F /* JugAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636C1E572276C97C001FE63F /* JugAnimator.swift */; };
 		63E6DC47226E9ECE0003A7AC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E6DC46226E9ECE0003A7AC /* AppDelegate.swift */; };
-		63E6DC49226E9ECE0003A7AC /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E6DC48226E9ECE0003A7AC /* ViewController.swift */; };
+		63E6DC49226E9ECE0003A7AC /* JugViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E6DC48226E9ECE0003A7AC /* JugViewController.swift */; };
 		63E6DC4C226E9ECE0003A7AC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63E6DC4A226E9ECE0003A7AC /* Main.storyboard */; };
 		63E6DC4E226E9ECF0003A7AC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 63E6DC4D226E9ECF0003A7AC /* Assets.xcassets */; };
 		63E6DC51226E9ECF0003A7AC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63E6DC4F226E9ECF0003A7AC /* LaunchScreen.storyboard */; };
@@ -28,9 +31,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		636C1E532276A42B001FE63F /* JugViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JugViewModelTests.swift; sourceTree = "<group>"; };
+		636C1E552276B544001FE63F /* JugViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JugViewModel.swift; sourceTree = "<group>"; };
+		636C1E572276C97C001FE63F /* JugAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JugAnimator.swift; sourceTree = "<group>"; };
 		63E6DC43226E9ECE0003A7AC /* WaterJugChallenge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WaterJugChallenge.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		63E6DC46226E9ECE0003A7AC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		63E6DC48226E9ECE0003A7AC /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		63E6DC48226E9ECE0003A7AC /* JugViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JugViewController.swift; sourceTree = "<group>"; };
 		63E6DC4B226E9ECE0003A7AC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		63E6DC4D226E9ECF0003A7AC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		63E6DC50226E9ECF0003A7AC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -82,9 +88,11 @@
 			isa = PBXGroup;
 			children = (
 				63E6DC46226E9ECE0003A7AC /* AppDelegate.swift */,
-				63E6DC48226E9ECE0003A7AC /* ViewController.swift */,
+				63E6DC48226E9ECE0003A7AC /* JugViewController.swift */,
 				63E6DC66226E9FBA0003A7AC /* JugController.swift */,
+				636C1E572276C97C001FE63F /* JugAnimator.swift */,
 				63E6DC68227501DC0003A7AC /* JugState.swift */,
+				636C1E552276B544001FE63F /* JugViewModel.swift */,
 				63E6DC4A226E9ECE0003A7AC /* Main.storyboard */,
 				63E6DC4D226E9ECF0003A7AC /* Assets.xcassets */,
 				63E6DC4F226E9ECF0003A7AC /* LaunchScreen.storyboard */,
@@ -97,6 +105,7 @@
 			isa = PBXGroup;
 			children = (
 				63E6DC5B226E9ECF0003A7AC /* JugChallengeTests.swift */,
+				636C1E532276A42B001FE63F /* JugViewModelTests.swift */,
 				63E6DC5D226E9ECF0003A7AC /* Info.plist */,
 			);
 			path = WaterJugChallengeTests;
@@ -203,9 +212,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				636C1E562276B544001FE63F /* JugViewModel.swift in Sources */,
 				63E6DC69227501DC0003A7AC /* JugState.swift in Sources */,
 				63E6DC67226E9FBA0003A7AC /* JugController.swift in Sources */,
-				63E6DC49226E9ECE0003A7AC /* ViewController.swift in Sources */,
+				636C1E582276C97C001FE63F /* JugAnimator.swift in Sources */,
+				63E6DC49226E9ECE0003A7AC /* JugViewController.swift in Sources */,
 				63E6DC47226E9ECE0003A7AC /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -215,6 +226,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				63E6DC5C226E9ECF0003A7AC /* JugChallengeTests.swift in Sources */,
+				636C1E542276A42B001FE63F /* JugViewModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

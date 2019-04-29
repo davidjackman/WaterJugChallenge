@@ -1,0 +1,137 @@
+//
+//  JugViewModelTests.swift
+//  WaterJugChallengeTests
+//
+//  Created by David Jackman on 4/28/19.
+//  Copyright © 2019 David Jackman. All rights reserved.
+//
+
+import XCTest
+@testable import WaterJugChallenge
+
+class JugViewModelTests: XCTestCase {
+
+    func testViewModel() {
+        XCTAssertEqual(JugViewModel(controller: JugController.solved(x: 1, y: 2, z: 3)).actionLabelText, "No\nSolution")
+        XCTAssertEqual(JugViewModel(controller: JugController.solved(x: 1, y: 2, z: 0)).actionLabelText, "No\nSolution")
+        XCTAssertEqual(JugViewModel(controller: JugController.solved(x: 0, y: 0, z: 0)).actionLabelText, "Solved!")
+        XCTAssertEqual(JugViewModel(controller: JugController.solved(x: 1, y: 2, z: 1)).actionLabelText, "Solved!")
+        XCTAssertEqual(JugViewModel(controller: JugController.solved(x: 8, y: 5, z: 3)).actionLabelText, "Solved!")
+    }
+    
+    func testModelAdvancing() {
+        let controller = JugController(x: 5, y: 8, z: 3)
+        let model = JugViewModel(controller: controller)
+        XCTAssertEqual(model.stepIndex, -1)
+        XCTAssertEqual(model.actionLabelText, "No\nSolution")
+        XCTAssertEqual(model.xLabelText, "?/?")
+        XCTAssertEqual(model.yLabelText, "?/?")
+        XCTAssertEqual(model.hasMoreSteps, false)
+        XCTAssertEqual(model.nextButtonIsEnabled, false)
+        XCTAssertEqual(model.previousButtonInEnabled, false)
+        XCTAssertEqual(model.autoButtonIsEnabled, false)
+        XCTAssertEqual(model.stepLabelText, "0/0")
+        XCTAssertEqual(model.xScale, 0.0)
+        XCTAssertEqual(model.yScale, 0.0)
+        XCTAssertEqual(model.xHeight(for: 200.0), 0.0)
+        XCTAssertEqual(model.yHeight(for: 200.0), 0.0)
+        XCTAssertNil(model.currentState)
+        
+        controller.solve()
+        XCTAssertEqual(model.stepIndex, -1)
+        XCTAssertEqual(model.actionLabelText, "Solved!")
+        XCTAssertEqual(model.xLabelText, "0/5")
+        XCTAssertEqual(model.yLabelText, "0/8")
+        XCTAssertEqual(model.hasMoreSteps, true)
+        XCTAssertEqual(model.nextButtonIsEnabled, true)
+        XCTAssertEqual(model.previousButtonInEnabled, false)
+        XCTAssertEqual(model.autoButtonIsEnabled, true)
+        XCTAssertEqual(model.stepLabelText, "0/2")
+        XCTAssertEqual(model.xScale, 0.0)
+        XCTAssertEqual(model.yScale, 0.0)
+        XCTAssertEqual(model.xHeight(for: 200.0), 0.0)
+        XCTAssertEqual(model.yHeight(for: 200.0), 0.0)
+        XCTAssertNil(model.currentState)
+        
+        model.advance()
+        XCTAssertEqual(model.stepIndex, 0)
+        XCTAssertEqual(model.actionLabelText, "Fill y")
+        XCTAssertEqual(model.xLabelText, "0/5")
+        XCTAssertEqual(model.yLabelText, "8/8")
+        XCTAssertEqual(model.hasMoreSteps, true)
+        XCTAssertEqual(model.nextButtonIsEnabled, true)
+        XCTAssertEqual(model.previousButtonInEnabled, true)
+        XCTAssertEqual(model.autoButtonIsEnabled, true)
+        XCTAssertEqual(model.stepLabelText, "1/2")
+        XCTAssertEqual(model.xScale, 0.0)
+        XCTAssertEqual(model.yScale, 1.0)
+        XCTAssertEqual(model.xHeight(for: 200.0), 0.0)
+        XCTAssertEqual(model.yHeight(for: 200.0), 200.0)
+        XCTAssertEqual(model.currentState!.y.contents, 8)
+
+        model.advance()
+        XCTAssertEqual(model.stepIndex, 1)
+        XCTAssertEqual(model.actionLabelText, "Transfer y to x")
+        XCTAssertEqual(model.xLabelText, "5/5")
+        XCTAssertEqual(model.yLabelText, "3/8")
+        XCTAssertEqual(model.hasMoreSteps, false)
+        XCTAssertEqual(model.nextButtonIsEnabled, false)
+        XCTAssertEqual(model.previousButtonInEnabled, true)
+        XCTAssertEqual(model.autoButtonIsEnabled, true)
+        XCTAssertEqual(model.stepLabelText, "2/2")
+        XCTAssertEqual(model.xScale, 1.0)
+        XCTAssertEqual(model.yScale, 0.375)
+        XCTAssertEqual(model.xHeight(for: 200.0), 200.0)
+        XCTAssertEqual(model.yHeight(for: 200.0), 75.0)
+        XCTAssertEqual(model.currentState!.y.contents, 3)
+        
+        model.advance()
+        XCTAssertEqual(model.stepIndex, 1)
+        XCTAssertEqual(model.actionLabelText, "Transfer y to x")
+        XCTAssertEqual(model.xLabelText, "5/5")
+        XCTAssertEqual(model.yLabelText, "3/8")
+        XCTAssertEqual(model.hasMoreSteps, false)
+        XCTAssertEqual(model.nextButtonIsEnabled, false)
+        XCTAssertEqual(model.previousButtonInEnabled, true)
+        XCTAssertEqual(model.autoButtonIsEnabled, true)
+        XCTAssertEqual(model.stepLabelText, "2/2")
+        XCTAssertEqual(model.xScale, 1.0)
+        XCTAssertEqual(model.yScale, 0.375)
+        XCTAssertEqual(model.xHeight(for: 200.0), 200.0)
+        XCTAssertEqual(model.yHeight(for: 200.0), 75.0)
+        XCTAssertEqual(model.currentState!.y.contents, 3)
+
+        model.retreat()
+        XCTAssertEqual(model.stepIndex, 0)
+        XCTAssertEqual(model.actionLabelText, "Fill y")
+        XCTAssertEqual(model.xLabelText, "0/5")
+        XCTAssertEqual(model.yLabelText, "8/8")
+        XCTAssertEqual(model.hasMoreSteps, true)
+        XCTAssertEqual(model.nextButtonIsEnabled, true)
+        XCTAssertEqual(model.previousButtonInEnabled, true)
+        XCTAssertEqual(model.autoButtonIsEnabled, true)
+        XCTAssertEqual(model.stepLabelText, "1/2")
+        XCTAssertEqual(model.xScale, 0.0)
+        XCTAssertEqual(model.yScale, 1.0)
+        XCTAssertEqual(model.xHeight(for: 200.0), 0.0)
+        XCTAssertEqual(model.yHeight(for: 200.0), 200.0)
+        XCTAssertEqual(model.currentState!.y.contents, 8)
+        
+        model.reset()
+        XCTAssertEqual(model.stepIndex, -1)
+        XCTAssertEqual(model.actionLabelText, "Solved!")
+        XCTAssertEqual(model.xLabelText, "0/5")
+        XCTAssertEqual(model.yLabelText, "0/8")
+        XCTAssertEqual(model.hasMoreSteps, true)
+        XCTAssertEqual(model.nextButtonIsEnabled, true)
+        XCTAssertEqual(model.previousButtonInEnabled, false)
+        XCTAssertEqual(model.autoButtonIsEnabled, true)
+        XCTAssertEqual(model.stepLabelText, "0/2")
+        XCTAssertEqual(model.xScale, 0.0)
+        XCTAssertEqual(model.yScale, 0.0)
+        XCTAssertEqual(model.xHeight(for: 200.0), 0.0)
+        XCTAssertEqual(model.yHeight(for: 200.0), 0.0)
+        XCTAssertNil(model.currentState)
+    }
+
+}

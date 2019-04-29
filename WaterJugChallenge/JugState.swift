@@ -13,12 +13,12 @@ struct JugTransaction {
     typealias Solution = [JugTransaction]
     
     struct State {
-        enum Index {
-            case x
-            case y
-        }
-        
         struct Jug {
+            enum Index {
+                case x
+                case y
+            }
+            
             let capacity: Int
             var contents: Int = 0
             
@@ -47,15 +47,12 @@ struct JugTransaction {
     }
     
     enum Step {
-        case fill(JugTransaction.State.Index)
-        case empty(JugTransaction.State.Index)
-        case transfer((from: JugTransaction.State.Index, to: JugTransaction.State.Index))
+        case fill(JugTransaction.State.Jug.Index)
+        case empty(JugTransaction.State.Jug.Index)
+        case transfer((from: JugTransaction.State.Jug.Index, to: JugTransaction.State.Jug.Index))
 
         func output() {
-            os_log(.default,
-                   log: OSLog(subsystem: "net.davidjackman.WaterJugChallenge",
-                              category: "Solution"),
-                   "%@", "\(description)")
+            os_log(.default, log: oslog, "%@", "\(description)")
         }
 
     }
@@ -68,17 +65,20 @@ struct JugTransaction {
     }
     
     func output() {
-        os_log(.default,
-               log: OSLog(subsystem: "net.davidjackman.WaterJugChallenge",
-                          category: "Solution"),
-               "%@", description)
+        os_log(.default, log: oslog, "%@", description)
     }
 
 }
 
 extension JugTransaction.State {
     
-    subscript(index: Index) -> Jug {
+    /**
+     Returns the `Jug` corresponding to `index`
+     
+     - parameters:
+        - index: A `Jug.Index` representing either `Jug` `x` or `Jug` `y`
+    */
+    subscript(index: Jug.Index) -> Jug {
         switch index {
         case .x:
             return x
@@ -87,23 +87,28 @@ extension JugTransaction.State {
         }
     }
     
-    func jug(for index: Index) -> Jug {
-        return self[index]
-    }
-    
-    var largest: Index {
+    /**
+     Index of the `Jug` with the largest capacity
+    */
+    var largest: Jug.Index {
         return x.capacity >= y.capacity ? .x : .y
     }
     
-    var smallest: Index {
+    /**
+     Index of the `Jug` with the smallest capacity
+     */
+    var smallest: Jug.Index {
         return x.capacity < y.capacity ? .x : .y
     }
     
-    func next(forward: Bool = true) -> JugTransaction.Step {
+    /**
+     Returns a `JugTransaction.Step` which advances the solution toward the finish
+    */
+    func nextStep(forward: Bool = true) -> JugTransaction.Step {
         let from    = forward ? largest : smallest
-        let fromJug = jug(for: from)
+        let fromJug = self[from]
         let to      = forward ? smallest : largest
-        let toJug   = jug(for: to)
+        let toJug   = self[to]
         
         switch (fromJug.contents, toJug.contents) {
         case (0, 0):
@@ -126,7 +131,10 @@ extension JugTransaction.State {
         }
     }
     
-    func filling(at index: Index) -> JugTransaction.State {
+    /**
+     Returns a new `JugTransaction.Step` by filling a `Jug` at `index`
+    */
+    func filling(at index: Jug.Index) -> JugTransaction.State {
         switch index {
         case .x:
             return JugTransaction.State(x: Jug(x.capacity, contents: x.capacity),
@@ -139,7 +147,10 @@ extension JugTransaction.State {
         }
     }
     
-    func emptying(at index: Index) -> JugTransaction.State {
+    /**
+     Returns a new `JugTransaction.Step` by emptying a `Jug` at `index`
+     */
+    func emptying(at index: Jug.Index) -> JugTransaction.State {
         switch index {
         case .x:
             return JugTransaction.State(x: Jug(x.capacity, contents: 0), y: y)
@@ -149,8 +160,20 @@ extension JugTransaction.State {
         }
     }
     
-    func transfering(_ from: JugTransaction.State.Index,
-                     _ to: JugTransaction.State.Index) -> JugTransaction.State {
+    /**
+     Returns a new `JugTransaction.Step` by transfering until a limit is reached
+            (either the target fills up or the source is emptied)
+        from `Jug` `Index` at `from` to the `Jug` at `Index` `to`
+     
+     - parameters:
+        - from: Source Index
+        - to: Destination Index
+     
+     - returns:
+        The newly created `State`
+     */
+    func transfering(_ from: Jug.Index,
+                     _ to: Jug.Index) -> JugTransaction.State {
         let f = self[from]
         let t = self[to]
         
@@ -183,6 +206,15 @@ extension JugTransaction.State {
         
     }
     
+    /**
+     Appends the step to the current solution
+     
+     - parameters:
+         - step: the step to apply to the current state
+     
+     - returns:
+        the step that was passed in
+    */
     func transactionApplyingStep(_ step: JugTransaction.Step) -> JugTransaction {
         step.output()
         let state: JugTransaction.State
@@ -202,7 +234,7 @@ extension JugTransaction.State {
     }
     
     func output() {
-        os_log(.default, log: OSLog(subsystem: "net.davidjackman.WaterJugChallenge", category: "Solution"), "%@", "x: \(x.contents)/\(x.capacity) y: \(y.contents)/\(y.capacity)")
+        os_log(.default, log: oslog, "%@", "x: \(x.contents)/\(x.capacity) y: \(y.contents)/\(y.capacity)")
     }
     
 

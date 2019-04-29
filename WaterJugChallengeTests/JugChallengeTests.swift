@@ -70,6 +70,7 @@ class WaterJugChallengeTests: XCTestCase {
     }
     
     static let WithSolutions: [String : (x: Int, y: Int, z: Int)] = [
+//        "Never Run this data set in the tests. It will crash xcode for obvious reasons" : (Int.max - 17, Int.max, 3),
         "Fill x\nTransfer x, y" : (3, 2, 1),
         "Fill x\nTransfer x, y\nFill x\nTransfer x, y" : (5, 7, 3),
         "Fill y\nTransfer y, x\nFill y\nTransfer y, x" : (7, 5, 3),
