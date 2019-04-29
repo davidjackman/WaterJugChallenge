@@ -10,6 +10,7 @@
 		636C1E542276A42B001FE63F /* JugViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636C1E532276A42B001FE63F /* JugViewModelTests.swift */; };
 		636C1E562276B544001FE63F /* JugViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636C1E552276B544001FE63F /* JugViewModel.swift */; };
 		636C1E582276C97C001FE63F /* JugAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636C1E572276C97C001FE63F /* JugAnimator.swift */; };
+		6387229B2276F131001AA7ED /* JugAnimatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6387229A2276F131001AA7ED /* JugAnimatorTests.swift */; };
 		63E6DC47226E9ECE0003A7AC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E6DC46226E9ECE0003A7AC /* AppDelegate.swift */; };
 		63E6DC49226E9ECE0003A7AC /* JugViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E6DC48226E9ECE0003A7AC /* JugViewController.swift */; };
 		63E6DC4C226E9ECE0003A7AC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63E6DC4A226E9ECE0003A7AC /* Main.storyboard */; };
@@ -34,6 +35,7 @@
 		636C1E532276A42B001FE63F /* JugViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JugViewModelTests.swift; sourceTree = "<group>"; };
 		636C1E552276B544001FE63F /* JugViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JugViewModel.swift; sourceTree = "<group>"; };
 		636C1E572276C97C001FE63F /* JugAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JugAnimator.swift; sourceTree = "<group>"; };
+		6387229A2276F131001AA7ED /* JugAnimatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JugAnimatorTests.swift; sourceTree = "<group>"; };
 		63E6DC43226E9ECE0003A7AC /* WaterJugChallenge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WaterJugChallenge.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		63E6DC46226E9ECE0003A7AC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		63E6DC48226E9ECE0003A7AC /* JugViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JugViewController.swift; sourceTree = "<group>"; };
@@ -106,6 +108,7 @@
 			children = (
 				63E6DC5B226E9ECF0003A7AC /* JugChallengeTests.swift */,
 				636C1E532276A42B001FE63F /* JugViewModelTests.swift */,
+				6387229A2276F131001AA7ED /* JugAnimatorTests.swift */,
 				63E6DC5D226E9ECF0003A7AC /* Info.plist */,
 			);
 			path = WaterJugChallengeTests;
@@ -226,6 +229,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				63E6DC5C226E9ECF0003A7AC /* JugChallengeTests.swift in Sources */,
+				6387229B2276F131001AA7ED /* JugAnimatorTests.swift in Sources */,
 				636C1E542276A42B001FE63F /* JugViewModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

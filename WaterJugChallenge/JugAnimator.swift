@@ -22,7 +22,7 @@ class JugAnimator {
     var button: UIButton?
     
     
-    init(viewModel: JugViewModel, button: UIButton) {
+    init(viewModel: JugViewModel, button: UIButton? = nil) {
         self.viewModel = viewModel
         self.button = button
     }
